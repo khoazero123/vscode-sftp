@@ -1,3 +1,6 @@
+## Unreleased
+* Fix: preserve the active profile when `sftp.json` is saved; only reset profile selection when the active profile is removed or renamed.
+
 ## 1.16.5 - 2026-07-30
 * Fix SSH/SFTP reconnect after SFTP channel closes with ssh2 v1.x.
 * Update maintainer branding and documentation.

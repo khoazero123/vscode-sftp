@@ -85,10 +85,35 @@ export function getBasePath(context: string, workspace: string) {
   return normalizePathForTrie(dirpath);
 }
 
-export function createFileService(config: any, workspace: string) {
-  if (config.defaultProfile) {
-    app.state.profile = config.defaultProfile;
+function syncProfileSelection(config: {
+  defaultProfile?: string;
+  profiles?: Record<string, unknown>;
+}) {
+  const availableProfiles = config.profiles ? Object.keys(config.profiles) : [];
+
+  // Config without profiles does not affect profile selection.
+  if (availableProfiles.length === 0) {
+    return;
   }
+
+  const currentProfile = app.state.profile;
+
+  if (currentProfile && availableProfiles.includes(currentProfile)) {
+    return;
+  }
+
+  if (config.defaultProfile && availableProfiles.includes(config.defaultProfile)) {
+    app.state.profile = config.defaultProfile;
+    return;
+  }
+
+  if (currentProfile) {
+    app.state.profile = null;
+  }
+}
+
+export function createFileService(config: any, workspace: string) {
+  syncProfileSelection(config);
 
   const normalizedBasePath = getBasePath(config.context, workspace);
   const service = new FileService(normalizedBasePath, workspace, config);
