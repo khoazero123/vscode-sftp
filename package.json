@@ -2,7 +2,7 @@
   "name": "sftp-extension",
   "displayName": "SFTP Extension",
   "description": "SFTP/FTP extension",
-  "version": "1.16.3",
+  "version": "1.16.4",
   "publisher": "khoazero123",
   "author": "khoazero123 (https://github.com/khoazero123)",
   "engines": {
