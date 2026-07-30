@@ -28,10 +28,23 @@ jobs:
         run: npm run compile
 
       - name: Package VSIX
-        run: npx --yes @vscode/vsce package
+        id: package
+        run: |
+          npx --yes @vscode/vsce package
+          echo "vsix=$(ls *.vsix)" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: '*.vsix'
           generate_release_notes: true
+
+      - name: Publish to Open VSX
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "$OVSX_PAT" ]; then
+            echo "::warning::OVSX_PAT secret is not configured. Skipping Open VSX publish."
+            exit 0
+          fi
+          npx --yes ovsx publish "${{ steps.package.outputs.vsix }}" --skip-duplicate
