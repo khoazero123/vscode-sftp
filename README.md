@@ -5,7 +5,7 @@ This fork is maintained by [@khoazero123](https://github.com/khoazero123) and co
 - Original upstream: [Natizyskunk/vscode-sftp](https://github.com/Natizyskunk/vscode-sftp)
 - Earlier upstream: [liximomo/vscode-sftp](https://github.com/liximomo/vscode-sftp)
 - Current source code and releases: https://github.com/khoazero123/vscode-sftp
-- Legacy VS Code Marketplace listing: https://marketplace.visualstudio.com/items?itemName=Natizyskunk.sftp
+- VS Code Marketplace listing: https://marketplace.visualstudio.com/items?itemName=KhoaZero123.sftp-extension
 
 Contributions, bug reports, and feature requests for this maintained fork are welcome through this repository's issues and pull requests.
 
@@ -29,10 +29,10 @@ VSCode-SFTP enables you to add, edit or delete files within a local directory an
 
 ## Installation
 
-### Method 1 (Legacy Marketplace)
+### Method 1 (VS Code Marketplace)
 1. Select Extensions (Ctrl + Shift + X).
-2. Uninstall current sftp extension from @liximomo.
-3. Install the legacy extension from VS Code Marketplace : https://marketplace.visualstudio.com/items?itemName=Natizyskunk.sftp.
+2. Uninstall current sftp extension from @liximomo or other SFTP extensions if needed.
+3. Install from VS Code Marketplace: https://marketplace.visualstudio.com/items?itemName=KhoaZero123.sftp-extension
 4. Voilà!
 
 ### Method 2 (Manual install from VSIX)
@@ -93,7 +93,7 @@ You can see the full list of configuration options [here](https://github.com/kho
 
 - [sftp sync extension for VS Code](#sftp-sync-extension-for-vs-code)
   - [Installation](#installation)
-    - [Method 1 (Legacy Marketplace)](#method-1-legacy-marketplace)
+    - [Method 1 (VS Code Marketplace)](#method-1-vs-code-marketplace)
     - [Method 2 (Manual install from VSIX)](#method-2-manual-install-from-vsix)
   - [Documentation](#documentation)
   - [Usage](#usage)

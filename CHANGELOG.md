@@ -1,3 +1,7 @@
+## 1.16.5 - 2026-07-30
+* Fix SSH/SFTP reconnect after SFTP channel closes with ssh2 v1.x.
+* Update maintainer branding and documentation.
+
 ## 1.16.4 - 2026-07-30
 * Upgrade `ssh2` version to official v1.17.0 by @mscdex.
 
