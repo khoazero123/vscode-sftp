@@ -24,6 +24,15 @@ interface WriteStream extends Writable {
   close(): void;
 }
 
+function withPath(err: Error, operation: string, path: string): Error {
+  if (!err || !path || err.message.indexOf(path) !== -1) {
+    return err;
+  }
+
+  err.message = `${err.message} (${operation}: ${path})`;
+  return err;
+}
+
 function toSimpleFileMode(mode: number) {
   return mode & parseInt('777', 8); // tslint:disable-line:no-bitwise
 }
@@ -59,7 +68,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.lstat(path, (err, stat) => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'lstat', path));
           return;
         }
 
@@ -76,7 +85,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.open(path, flags, mode, (err, handle) => {
         if (err) {
-          return reject(err);
+          return reject(withPath(err, `open ${flags}`, path));
         }
 
         resolve({
@@ -91,7 +100,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.close(fd.handle, err => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'close', fd.path));
           return;
         }
 
@@ -109,7 +118,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
           // see WriteStream.prototype.open in ssh2-streams.
           this.sftp.stat(fd.path, (_err, _stat) => {
             if (_err) {
-              reject(err);
+              reject(withPath(err, 'fstat', fd.path));
               return;
             }
 
@@ -131,7 +140,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
         this.toRemoteTimeInSecnonds(mtime),
         err => {
           if (err) {
-            reject(err);
+            reject(withPath(err, 'futimes', fd.path));
             return;
           }
 
@@ -150,7 +159,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
           // see WriteStream.prototype.open in ssh2-streams.
           this.sftp.chmod(fd.path, mode, _err => {
             if (_err) {
-              reject(err);
+              reject(withPath(err, 'fchmod', fd.path));
               return;
             }
 
@@ -168,7 +177,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.chmod(path, mode, err => {
         if(err) {
-          reject(err)
+          reject(withPath(err, 'chmod', path))
           return
         }
         resolve();
@@ -182,9 +191,10 @@ export default class SFTPFileSystem extends RemoteFileSystem {
       try {
         // const stream = this.sftp.createReadStream(path, opt);
         const stream = this.sftp.createReadStream(path, option);
+        stream.once('error', err => withPath(err, 'read', path));
         resolve(stream);
       } catch (err) {
-        reject(err);
+        reject(withPath(err, 'read', path));
       }
     });
   }
@@ -193,7 +203,9 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.rename(srcPath, destPath, err => {
         if (err) {
-          return reject(err);
+          return reject(
+            withPath(err, 'rename', `${srcPath} -> ${destPath}`)
+          );
         }
 
         resolve();
@@ -206,7 +218,9 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.ext_openssh_rename(srcPath, destPath, err => {
         if (err) {
-          return reject(err);
+          return reject(
+            withPath(err, 'openssh rename', `${srcPath} -> ${destPath}`)
+          );
         }
 
         resolve();
@@ -241,7 +255,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.readlink(path, (err, linkString) => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'readlink', path));
           return;
         }
 
@@ -254,7 +268,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise<void>((resolve, reject) => {
       this.sftp.symlink(targetPath, path, err => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'symlink', `${targetPath} -> ${path}`));
         }
         resolve();
       });
@@ -265,7 +279,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise<void>((resolve, reject) => {
       this.sftp.mkdir(dir, err => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'mkdir', dir));
           return;
         }
         resolve();
@@ -318,7 +332,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise((resolve, reject) => {
       this.sftp.readdir(dir, (err, result) => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'readdir', dir));
           return;
         }
 
@@ -334,7 +348,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
     return new Promise<void>((resolve, reject) => {
       this.sftp.unlink(path, err => {
         if (err) {
-          reject(err);
+          reject(withPath(err, 'unlink', path));
           return;
         }
 
@@ -348,7 +362,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
       if (!recursive) {
         this.sftp.rmdir(path, err => {
           if (err) {
-            reject(err);
+            reject(withPath(err, 'rmdir', path));
             return;
           }
           resolve();
@@ -399,7 +413,8 @@ export default class SFTPFileSystem extends RemoteFileSystem {
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const writer: WriteStream = this.sftp.createWriteStream(path, option);
-      writer.once('error', reject).once('finish', resolve); // transffered
+      writer.once('error', err => reject(withPath(err, 'write', path)))
+        .once('finish', resolve); // transffered
 
       input.once('error', err => {
         reject(err);

@@ -36,19 +36,19 @@ export default class SSHClient extends RemoteClient {
     connectOption: ConnectOption,
     config: Config
   ): Promise<void> {
-    const { hop, ...option } = connectOption;
+    const { hop, jump, jumps, ...option } = connectOption;
 
     let lastOption: ConnectOption = option;
     let fs: FileSystem | RemoteFileSystem = localFs;
     let sock;
-    if (
-      (Array.isArray(hop) && hop.length > 0) ||
-      (hop && Object.keys(hop).length > 0)
-    ) {
+    const connectOptions = this._getHoppingConnectOptions(
+      option,
+      hop,
+      jump,
+      jumps
+    );
+    if (connectOptions.length > 1) {
       this.hoppingClients = [];
-      const connectOptions = Array.isArray(hop)
-        ? [option].concat(hop)
-        : [option, hop];
       lastOption = connectOptions.pop()!;
 
       for (let index = 0; index < connectOptions.length; index++) {
@@ -104,6 +104,48 @@ export default class SSHClient extends RemoteClient {
       }
       this._limitSftpFileDescriptor();
     }
+  }
+
+  private _getHoppingConnectOptions(
+    option: ConnectOption,
+    hop?: ConnectOption | ConnectOption[],
+    jump?: ConnectOption | ConnectOption[],
+    jumps?: ConnectOption[]
+  ): ConnectOption[] {
+    const jumpOptions = this._normalizeConnectOptions(jumps || jump);
+    if (jumpOptions.length > 0) {
+      return jumpOptions.concat(option);
+    }
+
+    if (hop && this._hasConnectOptions(hop)) {
+      return Array.isArray(hop)
+        ? [option].concat(hop)
+        : [option, hop];
+    }
+
+    return [option];
+  }
+
+  private _normalizeConnectOptions(
+    options?: ConnectOption | ConnectOption[]
+  ): ConnectOption[] {
+    if (!this._hasConnectOptions(options)) {
+      return [];
+    }
+
+    if (Array.isArray(options)) {
+      return options;
+    }
+
+    return options ? [options] : [];
+  }
+
+  private _hasConnectOptions(
+    options?: ConnectOption | ConnectOption[]
+  ): boolean {
+    return Array.isArray(options)
+      ? options.length > 0
+      : !!(options && Object.keys(options).length > 0);
   }
 
   // connect1(readline): Promise<void> {

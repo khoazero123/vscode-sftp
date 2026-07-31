@@ -17,6 +17,8 @@ export interface ConnectOption {
   agent?: string;
   sock?: any;
   hop?: ConnectOption | ConnectOption[];
+  jump?: ConnectOption | ConnectOption[];
+  jumps?: ConnectOption[];
   limitOpenFilesOnRemote?: boolean | number;
 
   // ftp-only

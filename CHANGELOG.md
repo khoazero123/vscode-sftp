@@ -1,6 +1,11 @@
 ## Unreleased
 * Fix: preserve the active profile when `sftp.json` is saved; only reset profile selection when the active profile is removed or renamed.
 
+## 1.16.6-internal.0 - 2026-07-31
+* Add `jump` and `jumps` SFTP options so the top-level host represents the target server while jump hosts are declared separately.
+* Keep legacy `hop` configurations supported for existing users.
+* Include the requested remote path in SFTP errors such as "No such file" to make upload and diff failures easier to debug.
+
 ## 1.16.5 - 2026-07-30
 * Fix SSH/SFTP reconnect after SFTP channel closes with ssh2 v1.x.
 * Update maintainer branding and documentation.

@@ -13,13 +13,48 @@
       "$ref": "definitions.json#/sftp"
     },
     {
+      "$ref": "#/definitions/hopping"
+    },
+    {
       "type": "object",
       "properties": {
         "protocol": {
           "enum": ["sftp"],
           "description": "sftp connection protocol."
         },
+        "profiles": {
+          "description": "A collection of profiles. Using key as name. The profile will be merge to top level config.",
+          "patternProperties": {
+            "^.*$": {
+              "allOf": [
+                {
+                  "$ref": "definitions.json#/option"
+                },
+                {
+                  "$ref": "definitions.json#/host"
+                },
+                {
+                  "$ref": "definitions.json#/sftp"
+                },
+                {
+                  "$ref": "#/definitions/hopping"
+                }
+              ]
+            }
+          },
+          "default": {
+            "profileName": {}
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "hopping": {
+      "type": "object",
+      "properties": {
         "hop": {
+          "description": "Legacy connection hopping. The top-level host is the first hop, and this value points to the next hop or target. Prefer jump or jumps for new configs.",
           "oneOf": [
             {
               "$ref": "#/definitions/hop"
@@ -36,31 +71,39 @@
             "port": "bridgePort"
           }
         },
-        "profiles": {
-          "description": "A collection of profiles. Using key as name. The profile will be merge to top level config.",
-          "patternProperties": {
-            "^.*$": {
-              "allOf": [
-                {
-                  "$ref": "definitions.json#/option"
-                },
-                {
-                  "$ref": "definitions.json#/host"
-                },
-                {
-                  "$ref": "definitions.json#/sftp"
-                }
-              ]
+        "jump": {
+          "description": "A jump host used to reach the top-level target host.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/hop"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/hop"
+              }
             }
-          },
+          ],
           "default": {
-            "profileName": {}
+            "host": "jumpHost",
+            "port": "jumpPort"
           }
+        },
+        "jumps": {
+          "description": "Jump hosts used to reach the top-level target host. The connection order is local -> jumps[0] -> ... -> host.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hop"
+          },
+          "default": [
+            {
+              "host": "jumpHost",
+              "port": "jumpPort"
+            }
+          ]
         }
       }
-    }
-  ],
-  "definitions": {
+    },
     "hop": {
       "allOf": [
         {

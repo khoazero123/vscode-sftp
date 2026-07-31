@@ -178,9 +178,54 @@ _Note：_ `name` is required in this mode.
 ### Connection Hopping
 You can connect to a target server through a proxy with ssh protocol.
 
-_Note：_ Variable substitution is not working in a hop configuration.
+_Note：_ Variable substitution is not working in a jump or hop configuration.
 
-#### Single Hop
+#### Single Jump
+local -> jump -> target
+```json
+{
+  "name": "target",
+  "host": "targetHost",
+  "username": "targetUsername",
+  "remotePath": "/path/in/target",
+  "privateKeyPath": "/Users/jumpUser/.ssh/id_rsa", // <-- The key file is assumed on the jump.
+
+  "jump": {
+    "host": "jumpHost",
+    "username": "jumpUsername",
+    "privateKeyPath": "/Users/localUser/.ssh/id_rsa" // <-- The key file is assumed on the local.
+  }
+}
+```
+
+#### Multiple Jumps
+local -> jumpa -> jumpb -> target
+```json
+{
+  "name": "target",
+  "host": "targetHost",
+  "username": "targetUsername",
+  "remotePath": "/path/in/target",
+  "privateKeyPath": "/Users/jumpbUser/.ssh/id_rsa", // <-- The key file is assumed on jumpb.
+
+  "jumps": [
+    {
+      "host": "jumpAHost",
+      "username": "jumpAUsername",
+      "privateKeyPath": "/Users/localUser/.ssh/id_rsa" // <-- The key file is assumed on the local.
+    },
+    {
+      "host": "jumpBHost",
+      "username": "jumpBUsername",
+      "privateKeyPath": "/Users/jumpaUser/.ssh/id_rsa" // <-- The key file is assumed on jumpa.
+    }
+  ]
+}
+```
+
+#### Legacy Hop
+The legacy `hop` option is still supported for existing configurations. In this mode, the top-level host is the first hop, and the nested `hop` value is the target.
+
 local -> hop -> target
 ```json
 {
@@ -201,7 +246,7 @@ local -> hop -> target
 }
 ```
 
-#### Multiple Hop
+#### Legacy Multiple Hop
 local -> hopa -> hopb -> target
 ```json
 {

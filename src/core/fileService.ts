@@ -75,6 +75,8 @@ interface SftpOption {
   concurrency: number;
   sshCustomParams?: string;
   hop: (Host & SftpOption)[] | (Host & SftpOption);
+  jump: (Host & SftpOption)[] | (Host & SftpOption);
+  jumps: (Host & SftpOption)[];
 }
 
 interface FtpOption {
