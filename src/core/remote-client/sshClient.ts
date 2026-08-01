@@ -86,7 +86,10 @@ export default class SSHClient extends RemoteClient {
     }
 
     if (lastOption.privateKeyPath) {
-      const buffer = await fs.readFile(lastOption.privateKeyPath);
+      const buffer = await this._readPrivateKeyFile(
+        lastOption.privateKeyPath,
+        fs
+      );
       lastOption.privateKey = buffer.toString();
     }
 
@@ -124,6 +127,25 @@ export default class SSHClient extends RemoteClient {
     }
 
     return [option];
+  }
+
+  private async _readPrivateKeyFile(
+    privateKeyPath: string,
+    fallbackFs: FileSystem | RemoteFileSystem
+  ): Promise<Buffer> {
+    try {
+      return this._toBuffer(await localFs.readFile(privateKeyPath));
+    } catch (error) {
+      if (fallbackFs === localFs) {
+        throw error;
+      }
+
+      return this._toBuffer(await fallbackFs.readFile(privateKeyPath));
+    }
+  }
+
+  private _toBuffer(value: string | Buffer): Buffer {
+    return Buffer.isBuffer(value) ? value : Buffer.from(value);
   }
 
   private _normalizeConnectOptions(
