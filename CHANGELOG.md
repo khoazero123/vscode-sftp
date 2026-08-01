@@ -1,4 +1,5 @@
 ## Unreleased
+* Document root `privateKeyPath` lookup for jump connections: local paths are tried first, then the path is read from the final jump host.
 * Fix: preserve the active profile when `sftp.json` is saved; only reset profile selection when the active profile is removed or renamed.
 
 ## 1.16.6-internal.0 - 2026-07-31

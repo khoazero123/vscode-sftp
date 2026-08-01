@@ -180,6 +180,8 @@ You can connect to a target server through a proxy with ssh protocol.
 
 _Note：_ Variable substitution is not working in a jump or hop configuration.
 
+For `jump` and `jumps`, the root `privateKeyPath` authenticates to the final target host. The extension first tries to read that key path from the local machine. If the local file does not exist, it falls back to reading the same path through SFTP from the final jump host. This keeps existing jump-host key paths working while allowing the same local key path to be used for both the jump host and the target.
+
 #### Single Jump
 local -> jump -> target
 ```json
@@ -188,7 +190,7 @@ local -> jump -> target
   "host": "targetHost",
   "username": "targetUsername",
   "remotePath": "/path/in/target",
-  "privateKeyPath": "/Users/jumpUser/.ssh/id_rsa", // <-- The key file is assumed on the jump.
+  "privateKeyPath": "/Users/localUser/.ssh/id_rsa", // <-- The target key file is read from local first, then from the jump if local does not exist.
 
   "jump": {
     "host": "jumpHost",
@@ -206,7 +208,7 @@ local -> jumpa -> jumpb -> target
   "host": "targetHost",
   "username": "targetUsername",
   "remotePath": "/path/in/target",
-  "privateKeyPath": "/Users/jumpbUser/.ssh/id_rsa", // <-- The key file is assumed on jumpb.
+  "privateKeyPath": "/Users/localUser/.ssh/id_rsa", // <-- The target key file is read from local first, then from jumpb if local does not exist.
 
   "jumps": [
     {
