@@ -5,7 +5,8 @@ This fork is maintained by [@khoazero123](https://github.com/khoazero123) and co
 - Original upstream: [Natizyskunk/vscode-sftp](https://github.com/Natizyskunk/vscode-sftp)
 - Earlier upstream: [liximomo/vscode-sftp](https://github.com/liximomo/vscode-sftp)
 - Current source code and releases: https://github.com/khoazero123/vscode-sftp
-- VS Code Marketplace listing: https://marketplace.visualstudio.com/items?itemName=KhoaZero123.sftp-extension
+- Website: https://khoazero123.com/
+- Open VSX listing: https://open-vsx.org/extension/khoazero123/sftp-extension
 
 Contributions, bug reports, and feature requests for this maintained fork are welcome through this repository's issues and pull requests.
 
@@ -29,20 +30,23 @@ VSCode-SFTP enables you to add, edit or delete files within a local directory an
 
 ## Installation
 
-### Method 1 (VS Code Marketplace)
+> Note: The Visual Studio Code Marketplace listing was removed by Microsoft. Install from Open VSX (Cursor and other Open VSX clients) or from a GitHub Release VSIX.
+
+### Method 1 (Open VSX / Cursor)
 1. Select Extensions (Ctrl + Shift + X).
 2. Uninstall current sftp extension from @liximomo or other SFTP extensions if needed.
-3. Install from VS Code Marketplace: https://marketplace.visualstudio.com/items?itemName=KhoaZero123.sftp-extension
+3. Install from Open VSX: https://open-vsx.org/extension/khoazero123/sftp-extension  
+   Or search for **SFTP Extension** by `khoazero123` in Cursor.
 4. Voilà!
 
 ### Method 2 (Manual install from VSIX)
-To install just follow these steps from within VSCode:
+To install just follow these steps from within VS Code or Cursor:
 1. Select Extensions (Ctrl + Shift + X).
 2. Uninstall current sftp extension from @liximomo.
 3. Download the VSIX file from https://github.com/khoazero123/vscode-sftp/releases.
 4. Open "More Action" menu(ellipsis on the top) and click "Install from VSIX…".
 5. Locate VSIX file and select.
-6. Reload VSCode.
+6. Reload the editor.
 7. Voilà!
 
 ## Documentation
@@ -93,7 +97,7 @@ You can see the full list of configuration options [here](https://github.com/kho
 
 - [sftp sync extension for VS Code](#sftp-sync-extension-for-vs-code)
   - [Installation](#installation)
-    - [Method 1 (VS Code Marketplace)](#method-1-vs-code-marketplace)
+    - [Method 1 (Open VSX / Cursor)](#method-1-open-vsx--cursor)
     - [Method 2 (Manual install from VSIX)](#method-2-manual-install-from-vsix)
   - [Documentation](#documentation)
   - [Usage](#usage)

@@ -1,3 +1,7 @@
+## 1.16.7 - 2026-08-08
+* Docs: temporarily remove VS Code Marketplace install links (listing removed by Microsoft).
+* Docs: point installation to Open VSX / Cursor and GitHub Release VSIX; add website link.
+
 ## 1.16.6 - 2026-08-01
 * Document root `privateKeyPath` lookup for jump connections: local paths are tried first, then the path is read from the final jump host.
 * Fix: preserve the active profile when `sftp.json` is saved; only reset profile selection when the active profile is removed or renamed.
