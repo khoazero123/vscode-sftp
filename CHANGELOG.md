@@ -1,3 +1,6 @@
+## 1.16.8 - 2026-08-08
+* Set package homepage to https://khoazero123.com/ for Open VSX / Cursor marketplace verification.
+
 ## 1.16.7 - 2026-08-08
 * Docs: temporarily remove VS Code Marketplace install links (listing removed by Microsoft).
 * Docs: point installation to Open VSX / Cursor and GitHub Release VSIX; add website link.

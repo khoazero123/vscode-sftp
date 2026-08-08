@@ -2,7 +2,7 @@
   "name": "sftp-extension",
   "displayName": "SFTP Extension",
   "description": "SFTP/FTP extension",
-  "version": "1.16.7",
+  "version": "1.16.8",
   "publisher": "khoazero123",
   "author": "khoazero123 (https://github.com/khoazero123)",
   "engines": {
@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/khoazero123/vscode-sftp/issues"
   },
-  "homepage": "https://github.com/khoazero123/vscode-sftp/blob/master/README.md",
+  "homepage": "https://khoazero123.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/khoazero123/vscode-sftp.git"
